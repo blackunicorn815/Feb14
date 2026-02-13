@@ -5,24 +5,517 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>For Lia ❤️</title>
     <style>
-        body {
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
             font-family: 'Georgia', serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             height: 100vh;
+            overflow: hidden;
+            position: relative;
+            background: #000;
+        }
+        
+        .background-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
+            z-index: 1;
         }
-        h1 {
-            color: white;
-            font-size: 3em;
+        
+        .background-image {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+        }
+        
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.1);
+            z-index: 2;
+        }
+        
+        .container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             text-align: center;
+            z-index: 3;
+            width: 90%;
+            max-width: 450px;
+        }
+        
+        .envelope-container {
+            position: relative;
+            width: 320px;
+            height: 220px;
+            margin: 0 auto 40px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            perspective: 1000px;
+        }
+        
+        .envelope-container:hover {
+            transform: scale(1.03);
+        }
+        
+        .envelope {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+        
+        .envelope-open .envelope {
+            transform: rotateY(180deg);
+        }
+        
+        .envelope-front {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .envelope-body {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #f8f0e3, #f5e8d3);
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(210, 180, 140, 0.5);
+            z-index: 1;
+        }
+        
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 40%;
+            background: linear-gradient(135deg, #e8d8b6, #d4c4a3);
+            clip-path: polygon(0% 0%, 50% 100%, 100% 0%);
+            border-radius: 8px 8px 0 0;
+            z-index: 2;
+        }
+        
+        .envelope-seal {
+            position: absolute;
+            top: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle at 30% 30%, #ff6b6b, #ff5252);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(255, 82, 82, 0.4);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            z-index: 3;
+        }
+        
+        .seal-heart {
+            font-size: 1.8em;
+            color: white;
+        }
+        
+        .envelope-address {
+            position: absolute;
+            top: 60%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 1;
+            padding: 20px;
+        }
+        
+        .to-text {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.6em;
+            color: #8b4513;
+        }
+        
+        .lia-name-envelope {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #b22222;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .envelope-stamp {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 60px;
+            height: 80px;
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            border-radius: 5px;
+            transform: rotate(5deg);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid #d4af37;
+        }
+        
+        .stamp-text {
+            font-size: 0.7em;
+            color: #8b0000;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .envelope-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            transform: rotateY(180deg);
+            padding: 30px;
+        }
+        
+        .envelope-inside {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #fffaf0, #fdf5e6);
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid rgba(210, 180, 140, 0.5);
+        }
+        
+        .envelope-message {
+            color: #8b4513;
+            font-size: 2em;
+            font-family: 'Dancing Script', cursive;
+        }
+        
+        .question-box {
+            background-color: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            border: 1.5px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px 20px;
+            margin-bottom: 25px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease 1s, transform 0.8s ease 1s;
+            pointer-events: none;
+        }
+        
+        .question-visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+        
+        .lia-name {
+            color: #fff;
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.2em;
+            font-weight: 700;
+            display: inline-block;
+            padding: 0 5px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .lia-name:hover {
+            color: #ff69b4 !important;
+            transform: scale(1.08) !important;
+        }
+        
+        .question-text {
+            color: #fff;
+            font-size: 1.4em;
+            margin-top: 5px;
+        }
+        
+        .lia-image-container {
+            position: absolute;
+            top: -180px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 150px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+            z-index: 100;
+            pointer-events: none;
+        }
+        
+        .lia-name:hover + .lia-image-container {
+            opacity: 1;
+            visibility: visible;
+            top: -160px;
+        }
+        
+        .lia-image {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(255, 255, 255, 0.25);
+        }
+        
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease 1.3s, transform 0.8s ease 1.3s;
+        }
+        
+        .buttons-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .valentine-btn {
+            padding: 15px 30px;
+            font-size: 1.3em;
+            border: none;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: bold;
+            min-width: 150px;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, #ff6b6b, #ff5252);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .valentine-btn:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 10px 20px rgba(255, 0, 0, 0.4);
+        }
+        
+        .kiss-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .kiss-image {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            border-radius: 15px;
+        }
+        
+        .close-kiss, .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1001;
+        }
+        
+        .close-kiss:hover, .close-modal:hover {
+            color: #ff0000;
+        }
+        
+        .image-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            max-width: 85%;
+            max-height: 85%;
+            border-radius: 8px;
+        }
+        
+        .heart-decoration {
+            position: absolute;
+            font-size: 1.5em;
+            color: rgba(255, 255, 255, 0.5);
+            z-index: 2;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
         }
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <h1>Lia, will you be my Valentine? ❤️</h1>
+    <div class="background-container">
+        <img src="lilyofthevalley.jpg" alt="Background" class="background-image" id="backgroundImage">
+    </div>
+    
+    <div class="overlay"></div>
+    
+    <div class="heart-decoration" style="top: 10%; left: 5%;">❤️</div>
+    <div class="heart-decoration" style="top: 5%; right: 10%;">💖</div>
+    <div class="heart-decoration" style="bottom: 15%; left: 15%;">💝</div>
+    <div class="heart-decoration" style="bottom: 10%; right: 5%;">💕</div>
+    
+    <div class="container">
+        <div class="envelope-container" id="envelopeContainer">
+            <div class="envelope" id="envelope">
+                <div class="envelope-front">
+                    <div class="envelope-body"></div>
+                    <div class="envelope-flap">
+                        <div class="envelope-seal">
+                            <div class="seal-heart">❤️</div>
+                        </div>
+                    </div>
+                    <div class="envelope-address">
+                        <div class="to-text">To:</div>
+                        <div class="lia-name-envelope">Lia</div>
+                    </div>
+                    <div class="envelope-stamp">
+                        <div class="stamp-text">LOVE</div>
+                    </div>
+                </div>
+                <div class="envelope-back">
+                    <div class="envelope-inside">
+                        <div class="envelope-message">Happy Hearts Day!</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="question-box" id="questionBox">
+            <div class="question-container">
+                <span class="lia-name" id="liaName">Lia</span>
+                <div class="question-text">will you be my valentine?</div>
+            </div>
+            <div class="lia-image-container" id="liaImageContainer">
+                <img src="lia.jpg" alt="Lia" class="lia-image" id="liaImage">
+            </div>
+        </div>
+        
+        <div class="buttons" id="buttons">
+            <button id="yesBtn" class="valentine-btn">YES</button>
+            <button id="hellYesBtn" class="valentine-btn">HELL YESS!!!</button>
+        </div>
+    </div>
+    
+    <div class="kiss-modal" id="kissModal1">
+        <span class="close-kiss" id="closeKiss1">&times;</span>
+        <img src="kiss 1.jpg" alt="Kiss" class="kiss-image" id="kissImage1">
+    </div>
+    
+    <div class="kiss-modal" id="kissModal2">
+        <span class="close-kiss" id="closeKiss2">&times;</span>
+        <img src="kiss2.jpg" alt="Kiss 2" class="kiss-image" id="kissImage2">
+    </div>
+    
+    <div class="image-modal" id="imageModal">
+        <span class="close-modal" id="closeModal">&times;</span>
+        <img src="lia.jpg" alt="Lia" class="modal-content" id="modalImage">
+    </div>
+
+    <script>
+        const envelopeContainer = document.getElementById('envelopeContainer');
+        const envelope = document.getElementById('envelope');
+        const questionBox = document.getElementById('questionBox');
+        const buttons = document.getElementById('buttons');
+        let envelopeOpened = false;
+        
+        envelopeContainer.addEventListener('click', function() {
+            if (!envelopeOpened) {
+                envelope.classList.add('envelope-open');
+                envelopeOpened = true;
+                
+                setTimeout(() => {
+                    questionBox.classList.add('question-visible');
+                }, 800);
+                
+                setTimeout(() => {
+                    buttons.classList.add('buttons-visible');
+                }, 1200);
+                
+                setTimeout(() => {
+                    envelopeContainer.style.opacity = '0';
+                    envelopeContainer.style.pointerEvents = 'none';
+                }, 1500);
+            }
+        });
+        
+        document.getElementById('yesBtn').addEventListener('click', function() {
+            document.getElementById('kissModal1').style.display = 'flex';
+        });
+        
+        document.getElementById('hellYesBtn').addEventListener('click', function() {
+            document.getElementById('kissModal2').style.display = 'flex';
+        });
+        
+        document.getElementById('closeKiss1').addEventListener('click', function() {
+            document.getElementById('kissModal1').style.display = 'none';
+        });
+        
+        document.getElementById('closeKiss2').addEventListener('click', function() {
+            document.getElementById('kissModal2').style.display = 'none';
+        });
+        
+        document.getElementById('liaName').addEventListener('click', function() {
+            document.getElementById('imageModal').style.display = 'flex';
+        });
+        
+        document.getElementById('liaImage').addEventListener('click', function() {
+            document.getElementById('imageModal').style.display = 'flex';
+        });
+        
+        document.getElementById('closeModal').addEventListener('click', function() {
+            document.getElementById('imageModal').style.display = 'none';
+        });
+        
+        [kissModal1, kissModal2, imageModal].forEach(modal => {
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.style.display = 'none';
+                }
+            });
+        });
+    </script>
 </body>
 </html>
